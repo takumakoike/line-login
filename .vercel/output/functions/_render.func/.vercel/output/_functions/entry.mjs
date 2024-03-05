@@ -1,16 +1,16 @@
 import { renderers } from './renderers.mjs';
-import { l as levels, g as getEventPrefix, L as Logger, A as AstroIntegrationLogger, manifest } from './manifest_CODzR_9Q.mjs';
-import { A as AstroError, R as ResponseSentError, j as MiddlewareNoDataOrNextCalled, k as MiddlewareNotAResponse, l as ROUTE_TYPE_HEADER, n as REROUTE_DIRECTIVE_HEADER, G as GetStaticPathsRequired, o as InvalidGetStaticPathsReturn, p as InvalidGetStaticPathsEntry, q as GetStaticPathsExpectedParams, t as GetStaticPathsInvalidRouteParam, P as PageNumberParamNotFound, N as NoMatchingStaticPathFound, u as PrerenderDynamicEndpointPathCollide, v as ReservedSlotName, w as renderSlotToString, x as renderJSX, y as chunkToString, z as clientAddressSymbol$1, C as ClientAddressNotAvailable, S as StaticClientAddressNotAvailable, B as responseSentSymbol$1, D as LocalsNotAnObject, H as clientLocalsSymbol, J as ASTRO_VERSION, K as renderEndpoint, O as renderPage, Q as REROUTABLE_STATUS_CODES } from './chunks/astro_CklWPTX4.mjs';
+import { l as levels, g as getEventPrefix, L as Logger, A as AstroIntegrationLogger, manifest } from './manifest_DjoD6Uad.mjs';
+import { A as AstroError, R as ResponseSentError, j as MiddlewareNoDataOrNextCalled, k as MiddlewareNotAResponse, l as ROUTE_TYPE_HEADER, n as REROUTE_DIRECTIVE_HEADER, G as GetStaticPathsRequired, o as InvalidGetStaticPathsReturn, p as InvalidGetStaticPathsEntry, q as GetStaticPathsExpectedParams, t as GetStaticPathsInvalidRouteParam, P as PageNumberParamNotFound, N as NoMatchingStaticPathFound, u as PrerenderDynamicEndpointPathCollide, v as ReservedSlotName, w as renderSlotToString, x as renderJSX, y as chunkToString, z as clientAddressSymbol$1, C as ClientAddressNotAvailable, S as StaticClientAddressNotAvailable, B as responseSentSymbol$1, D as LocalsNotAnObject, H as clientLocalsSymbol, J as ASTRO_VERSION, K as renderEndpoint, O as renderPage, Q as REROUTABLE_STATUS_CODES } from './chunks/astro_CA1iCKcR.mjs';
 import { serialize, parse } from 'cookie';
-import { e as appendForwardSlash, j as joinPaths, t as trimSlashes, s as slash, p as prependForwardSlash, r as removeTrailingForwardSlash, f as collapseDuplicateSlashes } from './chunks/astro/assets-service_D9Pyj0Kz.mjs';
+import { e as appendForwardSlash, j as joinPaths, t as trimSlashes, s as slash, p as prependForwardSlash, r as removeTrailingForwardSlash, f as collapseDuplicateSlashes } from './chunks/astro/assets-service_BLu8Yiqn.mjs';
 import 'html-escaper';
 import 'clsx';
-import { s as sequence, o as onRequest } from './chunks/_astro-internal_middleware_jsxgu_aJ.mjs';
 import 'kleur/colors';
 import 'fast-glob';
 import nodePath from 'node:path';
 import buffer from 'node:buffer';
 import crypto from 'node:crypto';
+import { onRequest } from './_noop-middleware.mjs';
 
 function shouldAppendForwardSlash(trailingSlash, buildFormat) {
   switch (trailingSlash) {
@@ -64,144 +64,6 @@ class Unreachable extends Error {
       "Astro encountered an unexpected line of code.\nIn most cases, this is not your fault, but a bug in astro code.\nIf there isn't one already, please create an issue.\nhttps://astro.build/issues"
     );
   }
-}
-
-function parseLocale(header) {
-  if (header === "*") {
-    return [{ locale: header, qualityValue: void 0 }];
-  }
-  const result = [];
-  const localeValues = header.split(",").map((str) => str.trim());
-  for (const localeValue of localeValues) {
-    const split = localeValue.split(";").map((str) => str.trim());
-    const localeName = split[0];
-    const qualityValue = split[1];
-    if (!split) {
-      continue;
-    }
-    if (qualityValue && qualityValue.startsWith("q=")) {
-      const qualityValueAsFloat = Number.parseFloat(qualityValue.slice("q=".length));
-      if (Number.isNaN(qualityValueAsFloat) || qualityValueAsFloat > 1) {
-        result.push({
-          locale: localeName,
-          qualityValue: void 0
-        });
-      } else {
-        result.push({
-          locale: localeName,
-          qualityValue: qualityValueAsFloat
-        });
-      }
-    } else {
-      result.push({
-        locale: localeName,
-        qualityValue: void 0
-      });
-    }
-  }
-  return result;
-}
-function sortAndFilterLocales(browserLocaleList, locales) {
-  const normalizedLocales = toCodes(locales).map(normalizeTheLocale);
-  return browserLocaleList.filter((browserLocale) => {
-    if (browserLocale.locale !== "*") {
-      return normalizedLocales.includes(normalizeTheLocale(browserLocale.locale));
-    }
-    return true;
-  }).sort((a, b) => {
-    if (a.qualityValue && b.qualityValue) {
-      if (a.qualityValue > b.qualityValue) {
-        return -1;
-      } else if (a.qualityValue < b.qualityValue) {
-        return 1;
-      }
-    }
-    return 0;
-  });
-}
-function computePreferredLocale(request, locales) {
-  const acceptHeader = request.headers.get("Accept-Language");
-  let result = void 0;
-  if (acceptHeader) {
-    const browserLocaleList = sortAndFilterLocales(parseLocale(acceptHeader), locales);
-    const firstResult = browserLocaleList.at(0);
-    if (firstResult && firstResult.locale !== "*") {
-      for (const currentLocale of locales) {
-        if (typeof currentLocale === "string") {
-          if (normalizeTheLocale(currentLocale) === normalizeTheLocale(firstResult.locale)) {
-            result = currentLocale;
-          }
-        } else {
-          for (const currentCode of currentLocale.codes) {
-            if (normalizeTheLocale(currentCode) === normalizeTheLocale(firstResult.locale)) {
-              result = currentLocale.path;
-            }
-          }
-        }
-      }
-    }
-  }
-  return result;
-}
-function computePreferredLocaleList(request, locales) {
-  const acceptHeader = request.headers.get("Accept-Language");
-  let result = [];
-  if (acceptHeader) {
-    const browserLocaleList = sortAndFilterLocales(parseLocale(acceptHeader), locales);
-    if (browserLocaleList.length === 1 && browserLocaleList.at(0).locale === "*") {
-      return locales.map((locale) => {
-        if (typeof locale === "string") {
-          return locale;
-        } else {
-          return locale.codes.at(0);
-        }
-      });
-    } else if (browserLocaleList.length > 0) {
-      for (const browserLocale of browserLocaleList) {
-        for (const loopLocale of locales) {
-          if (typeof loopLocale === "string") {
-            if (normalizeTheLocale(loopLocale) === normalizeTheLocale(browserLocale.locale)) {
-              result.push(loopLocale);
-            }
-          } else {
-            for (const code of loopLocale.codes) {
-              if (code === browserLocale.locale) {
-                result.push(loopLocale.path);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  return result;
-}
-function computeCurrentLocale(pathname, locales, routingStrategy, defaultLocale) {
-  for (const segment of pathname.split("/")) {
-    for (const locale of locales) {
-      if (typeof locale === "string") {
-        if (!segment.includes(locale))
-          continue;
-        if (normalizeTheLocale(locale) === normalizeTheLocale(segment)) {
-          return locale;
-        }
-      } else {
-        if (locale.path === segment) {
-          return locale.codes.at(0);
-        } else {
-          for (const code of locale.codes) {
-            if (normalizeTheLocale(code) === normalizeTheLocale(segment)) {
-              return code;
-            }
-          }
-        }
-      }
-    }
-  }
-  if (routingStrategy === "pathname-prefix-other-locales" || routingStrategy === "domains-prefix-other-locales") {
-    return defaultLocale;
-  }
-  return void 0;
 }
 
 const DELETED_EXPIRATION = /* @__PURE__ */ new Date(0);
@@ -474,6 +336,144 @@ function redirectRouteGenerate(renderContext) {
   return redirect.destination;
 }
 
+function parseLocale(header) {
+  if (header === "*") {
+    return [{ locale: header, qualityValue: void 0 }];
+  }
+  const result = [];
+  const localeValues = header.split(",").map((str) => str.trim());
+  for (const localeValue of localeValues) {
+    const split = localeValue.split(";").map((str) => str.trim());
+    const localeName = split[0];
+    const qualityValue = split[1];
+    if (!split) {
+      continue;
+    }
+    if (qualityValue && qualityValue.startsWith("q=")) {
+      const qualityValueAsFloat = Number.parseFloat(qualityValue.slice("q=".length));
+      if (Number.isNaN(qualityValueAsFloat) || qualityValueAsFloat > 1) {
+        result.push({
+          locale: localeName,
+          qualityValue: void 0
+        });
+      } else {
+        result.push({
+          locale: localeName,
+          qualityValue: qualityValueAsFloat
+        });
+      }
+    } else {
+      result.push({
+        locale: localeName,
+        qualityValue: void 0
+      });
+    }
+  }
+  return result;
+}
+function sortAndFilterLocales(browserLocaleList, locales) {
+  const normalizedLocales = toCodes(locales).map(normalizeTheLocale);
+  return browserLocaleList.filter((browserLocale) => {
+    if (browserLocale.locale !== "*") {
+      return normalizedLocales.includes(normalizeTheLocale(browserLocale.locale));
+    }
+    return true;
+  }).sort((a, b) => {
+    if (a.qualityValue && b.qualityValue) {
+      if (a.qualityValue > b.qualityValue) {
+        return -1;
+      } else if (a.qualityValue < b.qualityValue) {
+        return 1;
+      }
+    }
+    return 0;
+  });
+}
+function computePreferredLocale(request, locales) {
+  const acceptHeader = request.headers.get("Accept-Language");
+  let result = void 0;
+  if (acceptHeader) {
+    const browserLocaleList = sortAndFilterLocales(parseLocale(acceptHeader), locales);
+    const firstResult = browserLocaleList.at(0);
+    if (firstResult && firstResult.locale !== "*") {
+      for (const currentLocale of locales) {
+        if (typeof currentLocale === "string") {
+          if (normalizeTheLocale(currentLocale) === normalizeTheLocale(firstResult.locale)) {
+            result = currentLocale;
+          }
+        } else {
+          for (const currentCode of currentLocale.codes) {
+            if (normalizeTheLocale(currentCode) === normalizeTheLocale(firstResult.locale)) {
+              result = currentLocale.path;
+            }
+          }
+        }
+      }
+    }
+  }
+  return result;
+}
+function computePreferredLocaleList(request, locales) {
+  const acceptHeader = request.headers.get("Accept-Language");
+  let result = [];
+  if (acceptHeader) {
+    const browserLocaleList = sortAndFilterLocales(parseLocale(acceptHeader), locales);
+    if (browserLocaleList.length === 1 && browserLocaleList.at(0).locale === "*") {
+      return locales.map((locale) => {
+        if (typeof locale === "string") {
+          return locale;
+        } else {
+          return locale.codes.at(0);
+        }
+      });
+    } else if (browserLocaleList.length > 0) {
+      for (const browserLocale of browserLocaleList) {
+        for (const loopLocale of locales) {
+          if (typeof loopLocale === "string") {
+            if (normalizeTheLocale(loopLocale) === normalizeTheLocale(browserLocale.locale)) {
+              result.push(loopLocale);
+            }
+          } else {
+            for (const code of loopLocale.codes) {
+              if (code === browserLocale.locale) {
+                result.push(loopLocale.path);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return result;
+}
+function computeCurrentLocale(pathname, locales, routingStrategy, defaultLocale) {
+  for (const segment of pathname.split("/")) {
+    for (const locale of locales) {
+      if (typeof locale === "string") {
+        if (!segment.includes(locale))
+          continue;
+        if (normalizeTheLocale(locale) === normalizeTheLocale(segment)) {
+          return locale;
+        }
+      } else {
+        if (locale.path === segment) {
+          return locale.codes.at(0);
+        } else {
+          for (const code of locale.codes) {
+            if (normalizeTheLocale(code) === normalizeTheLocale(segment)) {
+              return code;
+            }
+          }
+        }
+      }
+    }
+  }
+  if (routingStrategy === "pathname-prefix-other-locales" || routingStrategy === "domains-prefix-other-locales") {
+    return defaultLocale;
+  }
+  return void 0;
+}
+
 async function callMiddleware(onRequest, apiContext, responseFunction) {
   let nextCalled = false;
   let responseFunctionPromise = void 0;
@@ -505,6 +505,35 @@ async function callMiddleware(onRequest, apiContext, responseFunction) {
       return value;
     }
   });
+}
+
+function sequence(...handlers) {
+  const filtered = handlers.filter((h) => !!h);
+  const length = filtered.length;
+  if (!length) {
+    const handler = defineMiddleware((context, next) => {
+      return next();
+    });
+    return handler;
+  }
+  return defineMiddleware((context, next) => {
+    return applyHandle(0, context);
+    function applyHandle(i, handleContext) {
+      const handle = filtered[i];
+      const result = handle(handleContext, async () => {
+        if (i < length - 1) {
+          return applyHandle(i + 1, handleContext);
+        } else {
+          return next();
+        }
+      });
+      return result;
+    }
+  });
+}
+
+function defineMiddleware(fn) {
+  return fn;
 }
 
 function pathnameHasLocale(pathname, locales) {
@@ -2023,9 +2052,9 @@ const createExports = (manifest, { middlewareSecret }) => {
   return { default: handler };
 };
 
-const _page0 = () => import('./chunks/generic_BCOAmumU.mjs');
-const _page1 = () => import('./chunks/after-login_BxIwgPWn.mjs');
-const _page2 = () => import('./chunks/index_CkboaZR6.mjs');
+const _page0 = () => import('./chunks/generic_DsjjO13O.mjs');
+const _page1 = () => import('./chunks/after-login_5sP8gHWn.mjs');
+const _page2 = () => import('./chunks/index_d19AmTXC.mjs');
 const pageMap = new Map([
     ["node_modules/astro/dist/assets/endpoint/generic.js", _page0],
     ["src/pages/after-login.astro", _page1],
@@ -2038,7 +2067,7 @@ const _manifest = Object.assign(manifest, {
     middleware: onRequest
 });
 const _args = {
-    "middlewareSecret": "1593a18a-9191-46ac-95a0-9e66387a8a7b"
+    "middlewareSecret": "322bc79c-1c55-4f59-9d4f-5351c6954a25"
 };
 const _exports = createExports(_manifest, _args);
 const __astrojsSsrVirtualEntry = _exports.default;

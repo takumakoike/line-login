@@ -1,4 +1,4 @@
-import { A as AstroError, E as ExpectedImage, L as LocalImageUsedWrongly, M as MissingImageDimension, U as UnsupportedImageFormat, I as IncompatibleDescriptorOptions, a as UnsupportedImageConversion, b as MissingSharp } from '../astro_CklWPTX4.mjs';
+import { A as AstroError, E as ExpectedImage, L as LocalImageUsedWrongly, M as MissingImageDimension, U as UnsupportedImageFormat, I as IncompatibleDescriptorOptions, a as UnsupportedImageConversion, b as MissingSharp } from '../astro_CA1iCKcR.mjs';
 
 function appendForwardSlash(path) {
   return path.endsWith("/") ? path : path + "/";

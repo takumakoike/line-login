@@ -16,10 +16,6 @@
 			"dest": "_render"
 		},
 		{
-			"src": "^\\/after-login\\/?$",
-			"dest": "_render"
-		},
-		{
 			"src": "^\\/$",
 			"dest": "_render"
 		}

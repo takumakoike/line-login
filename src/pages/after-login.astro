@@ -2,7 +2,7 @@
 export const prerender = true;
 import {CLIENT_ID, REDIRECT_URI} from "./index.astro"
 const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET
-let CODE;
+let CODE: any;
 const now_url = Astro.request.url;
 if(now_url){
 	const param = new URLSearchParams(now_url)
@@ -19,7 +19,7 @@ const options = {
 	},
 	body:new URLSearchParams({
 		grant_type:"authorization_code",
-		code:CODE,
+		code:CODE || "",
 		redirect_uri:REDIRECT_URI,
 		client_id:CLIENT_ID,
 		client_secret:CLIENT_SECRET
@@ -45,7 +45,7 @@ const check_options = {
 		"Content-Type":"application/x-www-form-urlencoded",
 	},
 	body: new URLSearchParams({
-		id_token:id_token,
+		id_token:id_token || "",
 		client_id: CLIENT_ID,
 	}).toString()
 }
@@ -68,7 +68,7 @@ await fetch(check_url, check_options)
 	</head>
 	<body>
 		<h1>こんにちは、{USER_NAME}さんログインできました</h1>
-
+		<p>{access_token}</p>
 		<a href="">LINE ログアウト</a>
 	</body>
 </html>
