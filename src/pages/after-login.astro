@@ -1,60 +1,60 @@
 ---
 export const prerender = true;
-import {CLIENT_ID, REDIRECT_URI} from "./index.astro"
-const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET
-let CODE: any;
-const now_url = Astro.request.url;
-if(now_url){
-	const param = new URLSearchParams(now_url)
-	CODE = param.get("code");
-} else{
-	CODE = "";
-}
-const URL = `https://api.line.me/oauth2/v2.1/token`
+// import {CLIENT_ID, REDIRECT_URI} from "./index.astro"
+// const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET
+// let CODE: any;
+// const now_url = Astro.request.url;
+// if(now_url){
+// 	const param = new URLSearchParams(now_url)
+// 	CODE = param.get("code");
+// } else{
+// 	CODE = "";
+// }
+// const URL = `https://api.line.me/oauth2/v2.1/token`
 
-const options = {
-	method: "post",
-	headers:{
-		"Content-Type":"application/x-www-form-urlencoded",
-	},
-	body:new URLSearchParams({
-		grant_type:"authorization_code",
-		code:CODE || "",
-		redirect_uri:REDIRECT_URI,
-		client_id:CLIENT_ID,
-		client_secret:CLIENT_SECRET
-	}).toString(),
-}
+// const options = {
+// 	method: "post",
+// 	headers:{
+// 		"Content-Type":"application/x-www-form-urlencoded",
+// 	},
+// 	body:new URLSearchParams({
+// 		grant_type:"authorization_code",
+// 		code:CODE || "",
+// 		redirect_uri:REDIRECT_URI,
+// 		client_id:CLIENT_ID,
+// 		client_secret:CLIENT_SECRET
+// 	}).toString(),
+// }
 
-let access_token;
-let id_token;
+// let access_token;
+// let id_token;
 
-await fetch(URL, options)
-	.then((response) => response.json())
-	.then((json) => {
-		access_token = json.access_token;
-		id_token = json.id_token;
-	})
+// await fetch(URL, options)
+// 	.then((response) => response.json())
+// 	.then((json) => {
+// 		access_token = json.access_token;
+// 		id_token = json.id_token;
+// 	})
 
-// ユーザー情報の取得
-let USER_NAME;
-const check_url = "https://api.line.me/oauth2/v2.1/verify";
-const check_options = {
-	method: "post",
-	headers:{
-		"Content-Type":"application/x-www-form-urlencoded",
-	},
-	body: new URLSearchParams({
-		id_token:id_token || "",
-		client_id: CLIENT_ID,
-	}).toString()
-}
+// // ユーザー情報の取得
+// let USER_NAME;
+// const check_url = "https://api.line.me/oauth2/v2.1/verify";
+// const check_options = {
+// 	method: "post",
+// 	headers:{
+// 		"Content-Type":"application/x-www-form-urlencoded",
+// 	},
+// 	body: new URLSearchParams({
+// 		id_token:id_token || "",
+// 		client_id: CLIENT_ID,
+// 	}).toString()
+// }
 
-await fetch(check_url, check_options)
-	.then( (res) =>  res.json())
-	.then( (data) => {
-		USER_NAME = data.name;
-	})
+// await fetch(check_url, check_options)
+// 	.then( (res) =>  res.json())
+// 	.then( (data) => {
+// 		USER_NAME = data.name;
+// 	})
 
 ---
 
@@ -67,8 +67,8 @@ await fetch(check_url, check_options)
 		<title>Astro</title>
 	</head>
 	<body>
-		<h1>こんにちは、{USER_NAME}さんログインできました</h1>
-		<p>{access_token}</p>
+		<!-- <h1>こんにちは、{USER_NAME}さんログインできました</h1>
+		<p>{access_token}</p> -->
 		<a href="">LINE ログアウト</a>
 	</body>
 </html>
